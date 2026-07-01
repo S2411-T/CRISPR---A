@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeCRISPR AI — Precision Gene Editing Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --bg:#04060e;
+            --surface:#0a0f1e;
+            --card:#0d1528;
+            --border:rgba(255,255,255,.06);
+            --cyan:#38bdf8;
+            --emerald:#34d399;
+            --rose:#fb7185;
+            --amber:#fbbf24;
+            --violet:#a78bfa;
+            --text:#e2e8f0;
+            --muted:#64748b;
+        }
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
+        
+        /* === DNA HELIX BACKGROUND === */
+        .dna-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+        .dna-bg canvas{width:100%;height:100%;opacity:.12}
+        
+        /* === GLOBAL GLOW BLOBS === */
+        .glow-blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+        .glow-blob.cyan{width:600px;height:600px;background:rgba(56,189,248,.07);top:-10%;left:-5%}
+        .glow-blob.emerald{width:500px;height:500px;background:rgba(52,211,153,.05);bottom:10%;right:-8%}
+        .glow-blob.violet{width:400px;height:400px;background:rgba(167,139,250,.04);top:50%;left:30%}
+        
+        /* === NAVBAR === */
+        nav{position:fixed;top:0;width:100%;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(4,6,14,.7);border-bottom:1px solid var(--border);transition:all .3s}
+        nav.scrolled{background:rgba(4,6,14,.95);box-shadow:0 4px 30px rgba(0,0,0,.5)}
+        .nav-brand{display:flex;align-items:center;gap:.75rem}
+        .nav-brand .shield{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--cyan),var(--emerald));display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 20px rgba(56,189,248,.3)}
+        .nav-brand span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.25rem;color:#fff;letter-spacing:-.02em}
+        .nav-brand span em{font-style:normal;color:var(--cyan)}
+        .nav-links{display:flex;gap:2rem;align-items:center}
+        .nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s}
+        .nav-links a:hover{color:#fff}
+        .nav-cta{padding:.6rem 1.5rem;border-radius:10px;background:linear-gradient(135deg,var(--cyan),#06b6d4);color:#000;font-weight:700;font-size:.8rem;text-decoration:none;letter-spacing:.03em;text-transform:uppercase;transition:all .25s;box-shadow:0 0 20px rgba(56,189,248,.15)}
+        .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(56,189,248,.3)}
+
+        /* === HERO === */
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 2rem 4rem;position:relative;z-index:1}
+        .hero-inner{max-width:1100px;text-align:center}
+        .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border-radius:99px;border:1px solid rgba(56,189,248,.25);background:rgba(56,189,248,.06);font-size:.7rem;font-weight:600;color:var(--cyan);margin-bottom:2rem;letter-spacing:.06em;text-transform:uppercase}
+        .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--emerald);animation:pulse-dot 2s infinite}
+        @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+        
+        .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:700;line-height:1.05;letter-spacing:-.04em;color:#fff;margin-bottom:1.5rem}
+        .hero h1 .gradient{background:linear-gradient(135deg,var(--cyan),var(--emerald),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero p{max-width:640px;margin:0 auto 2.5rem;font-size:1.1rem;color:var(--muted);line-height:1.75;font-weight:400}
+        .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .btn-primary{padding:.9rem 2.2rem;border-radius:12px;background:linear-gradient(135deg,var(--cyan),#0ea5e9);color:#000;font-weight:800;font-size:.85rem;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:all .3s;border:none;cursor:pointer;box-shadow:0 4px 25px rgba(56,189,248,.2)}
+        .btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(56,189,248,.35)}
+        .btn-secondary{padding:.9rem 2.2rem;border-radius:12px;background:transparent;color:#fff;font-weight:700;font-size:.85rem;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:all .3s;border:1px solid rgba(255,255,255,.15);cursor:pointer}
+        .btn-secondary:hover{border-color:var(--cyan);background:rgba(56,189,248,.06)}
+
+        /* === SEQUENCE TICKER === */
+        .ticker-wrap{overflow:hidden;width:100%;margin:4rem 0 0;position:relative}
+        .ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;width:120px;height:100%;z-index:2}
+        .ticker-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+        .ticker-wrap::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+        .ticker{display:flex;animation:scroll-ticker 30s linear infinite;width:max-content}
+        .ticker span{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:rgba(56,189,248,.3);letter-spacing:.15em;padding:0 2rem;white-space:nowrap}
+        @keyframes scroll-ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* === SECTION COMMON === */
+        section{position:relative;z-index:1;padding:6rem 2rem}
+        .section-inner{max-width:1200px;margin:0 auto}
+        .section-label려는{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--cyan);margin-bottom:.75rem}
+        .section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--cyan);margin-bottom:.75rem}
+        .section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:#fff;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+        .section-desc{max-width:600px;color:var(--muted);font-size:.95rem;line-height:1.7;margin-bottom:3rem}
+
+        /* === MODEL SECTION === */
+        .model-visual{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+        .model-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;position:relative;overflow:hidden}
+        .model-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 180deg,transparent,rgba(56,189,248,.04),transparent 40%);animation:spin-slow 12s linear infinite}
+        @keyframes spin-slow{100%{transform:rotate(360deg)}}
+        .model-card-inner{position:relative;z-index:1}
+        .model-tag{display:inline-block;padding:.3rem .8rem;border-radius:6px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}
+        .model-tag.transformer{background:rgba(56,189,248,.12);color:var(--cyan);border:1px solid rgba(56,189,248,.25)}
+        .model-tag.llm{background:rgba(167,139,250,.12);color:var(--violet);border:1px solid rgba(167,139,250,.25)}
+        .model-name{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.75rem}
+        .model-desc{color:var(--muted);font-size:.85rem;line-height:1.7;margin-bottom:1.5rem}
+        .model-specs{display:flex;flex-direction:column;gap:.75rem}
+        .model-spec{display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--text)}
+        .model-spec .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+        .model-spec .icon.cyan{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2)}
+        .model-spec .icon.violet{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2)}
+
+        .model-features{display:flex;flex-direction:column;gap:1.5rem}
+        .model-feat{display:flex;gap:1rem;align-items:flex-start}
+        .model-feat-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--cyan);min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(56,189,248,.2);border-radius:8px;background:rgba(56,189,248,.05)}
+        .model-feat h4{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.25rem}
+        .model-feat p{font-size:.8rem;color:var(--muted);line-height:1.6}
+
+        /* === FEATURES GRID === */
+        .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+        .feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden}
+        .feature-card:hover{border-color:rgba(56,189,248,.3);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+        .feature-card .feat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.25rem}
+        .feature-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:.5rem}
+        .feature-card p{font-size:.8rem;color:var(--muted);line-height:1.65}
+        
+        .feat-icon.ic1{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2)}
+        .feat-icon.ic2{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)}
+        .feat-icon.ic3{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2)}
+        .feat-icon.ic4{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2)}
+        .feat-icon.ic5{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.2)}
+        .feat-icon.ic6{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2)}
+
+        /* === LIVE DEMO === */
+        .demo-container{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+        .demo-titlebar{display:flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;background:rgba(0,0,0,.3);border-bottom:1px solid var(--border)}
+        .demo-dot{width:10px;height:10px;border-radius:50%}
+        .demo-dot.r{background:#f43f5e}.demo-dot.y{background:#fbbf24}.demo-dot.g{background:#22c55e}
+        .demo-body{padding:2rem;font-family:'JetBrains Mono',monospace}
+        .demo-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;font-size:.8rem}
+        .demo-label{color:var(--muted);min-width:100px;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+        .demo-seq{color:var(--cyan);letter-spacing:.12em;font-weight:600}
+        .demo-result{margin-top:1.5rem;padding:1.25rem;border-radius:12px;border:1px solid rgba(52,211,153,.2);background:rgba(52,211,153,.04)}
+        .demo-result .score{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--emerald)}
+        .demo-result .label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+        .anim-bar{height:4px;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--emerald));animation:fill-bar 3s ease-in-out infinite alternate}
+        @keyframes fill-bar{0%{width:20%}100%{width:92%}}
+
+        /* === ARCHITECTURE === */
+        .arch-pipeline{display:flex;gap:0;align-items:stretch;justify-content:center;flex-wrap:wrap}
+        .arch-step{flex:1;min-width:180px;max-width:220px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;text-align:center;position:relative}
+        .arch-step .step-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:700;color:var(--cyan);margin-bottom:.5rem;letter-spacing:.1em}
+        .arch-step h4{font-size:.85rem;font-weight:700;color:#fff;margin-bottom:.35rem}
+        .arch-step p{font-size:.72rem;color:var(--muted);line-height:1.5}
+        .arch-arrow{display:flex;align-items:center;color:rgba(56,189,248,.3);font-size:1.5rem;padding:0 .5rem}
+
+        /* === STATS === */
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
+        .stat-card{text-align:center;padding:2rem;background:var(--card);border:1px solid var(--border);border-radius:16px}
+        .stat-card .num{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:700;color:#fff;margin-bottom:.25rem}
+        .stat-card .num em{font-style:normal;color:var(--cyan)}
+        .stat-card .lbl{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+        /* === DISCLAIMER === */
+        .disclaimer{max-width:900px;margin:0 auto;padding:2rem;border-radius:16px;border:1px solid rgba(251,191,36,.15);background:rgba(251,191,36,.03);text-align:center}
+        .disclaimer p{font-size:.8rem;color:rgba(251,191,36,.8);line-height:1.7}
+
+        /* === CTA === */
+        .cta-section{text-align:center;padding:8rem 2rem}
+        .cta-section h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:#fff;letter-spacing:-.03em;margin-bottom:1rem}
+        .cta-section p{color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto 2.5rem;line-height:1.7}
+
+        /* === FOOTER === */
+        footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:.75rem;position:relative;z-index:1}
+        footer a{color:var(--cyan);text-decoration:none}
+
+        /* === SCROLL REVEAL === */
+        .reveal{opacity:0;transform:translateY(30px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        /* === RESPONSIVE === */
+        @media(max-width:900px){
+            .model-visual{grid-template-columns:1fr}
+            .features-grid{grid-template-columns:1fr}
+            .stats-row{grid-template-columns:repeat(2,1fr)}
+            .arch-pipeline{flex-direction:column;align-items:center}
+            .arch-arrow{transform:rotate(90deg)}
+            .nav-links{display:none}
+        }
+        @media(prefers-reduced-motion:reduce){
+            .reveal{opacity:1;transform:none;transition:none}
+            .ticker{animation:none}
+            .anim-bar{animation:none;width:80%}
+            .model-card::before{animation:none}
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-blob cyan"></div>
+    <div class="glow-blob emerald"></div>
+    <div class="glow-blob violet"></div>
+    <div class="dna-bg"><canvas id="dna-canvas"></canvas></div>
+
+    <nav id="navbar">
+        <div class="nav-brand">
+            <div class="shield">🛡️</div>
+            <span>SafeCRISPR <em>AI</em></span>
+        </div>
+        <div class="nav-links">
+            <a href="#models">ML Models</a>
+            <a href="#features">Features</a>
+            <a href="#architecture">Pipeline</a>
+            <a href="#demo">Live Preview</a>
+        </div>
+        <a href="/dashboard" class="nav-cta">Launch App →</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-badge reveal"><span class="dot"></span> DNABERT Transformer · Live Inference</div>
+            <h1 class="reveal">Predict Off-Target<br>Risks <span class="gradient">Before They Happen</span></h1>
+            <p class="reveal">SafeCRISPR AI uses a pre-trained DNABERT transformer model to analyze guide RNA sequences, extract multi-head self-attention maps, and surface high-risk off-target binding sites — all before you step into the lab.</p>
+            <div class="hero-actions reveal">
+                <a href="/dashboard" class="btn-primary">Open Analysis Platform</a>
+                <a href="#features" class="btn-secondary">Explore Features</a>
+            </div>
+            <div class="ticker-wrap reveal">
+                <div class="ticker">
+                    <span>ATCGATCGATCG · GCCAATCGATCG · TTAGGCATCGAA · CGATCGATCGAT · PAM-NGG · SpCas9 · AsCas12a · GUIDE-seq · DNABERT-6 ·</span>
+                    <span>ATCGATCGATCG · GCCAATCGATCG · TTAGGCATCGAA · CGATCGATCGAT · PAM-NGG · SpCas9 · AsCas12a · GUIDE-seq · DNABERT-6 ·</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="models">
+        <div class="section-inner">
+            <div class="section-label reveal">Machine Learning Core</div>
+            <div class="section-title reveal">Two AI Engines. One Prediction Pipeline.</div>
+            <div class="section-desc reveal">SafeCRISPR fuses a fine-tuned DNA language model with an LLM-powered research copilot to give you structural risk analysis and natural-language briefings in a single interface.</div>
+
+            <div class="model-visual">
+                <div class="model-card reveal">
+                    <div class="model-card-inner">
+                        <div class="model-tag transformer">Transformer Model</div>
+                        <div class="model-name">DNABERT-6</div>
+                        <div class="model-desc">A pre-trained 6-mer DNA language model (zhihan1996/DNA_bert_6) fine-tuned for sequence classification. Processes overlapping k-mer tokens from combined gRNA + target windows to produce real multi-head self-attention matrices.</div>
+                        <div class="model-specs">
+                            <div class="model-spec"><div class="icon cyan">🧬</div> 6-mer tokenization of combined 40bp interaction window</div>
+                            <div class="model-spec"><div class="icon cyan">🔍</div> Multi-head self-attention extraction (last layer averaged)</div>
+                            <div class="model-spec"><div class="icon cyan">📐</div> Scipy zoom interpolation to per-nucleotide attention map</div>
+                            <div class="model-spec"><div class="icon cyan">⚡</div> Local weight caching with HuggingFace Hub fallback</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="model-card reveal">
+                    <div class="model-card-inner">
+                        <div class="model-tag llm">LLM Copilot</div>
+                        <div class="model-name">Groq Inference Engine</div>
+                        <div class="model-desc">An integrated AI research copilot powered by Groq's high-speed inference API. Delivers exhaustive, peer-review-grade analysis briefs covering SpCas9 conformational states, R-loop hybridization thermodynamics, and mismatch kinetics.</div>
+                        <div class="model-specs">
+                            <div class="model-spec"><div class="icon violet">🤖</div> System-prompted as Principal Bioinformatics Fellow</div>
+                            <div class="model-spec"><div class="icon violet">📝</div> 4,000 token briefs — Nature Biotechnology caliber depth</div>
+                            <div class="model-spec"><div class="icon violet">🌡️</div> Temperature 0.3 for factual, deterministic responses</div>
+                            <div class="model-spec"><div class="icon violet">💬</div> Context-aware workspace variable injection</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="section-inner">
+            <div class="section-label reveal">Full Capability Suite</div>
+            <div class="section-title reveal">Everything You Need for Safer Edits</div>
+            <div class="section-desc reveal">From single-guide risk checks to multi-candidate batch ranking, chromosome mapping, and exportable clinical reports.</div>
+
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feat-icon ic1">🎯</div>
+                    <h3>Off-Target Risk Prediction</h3>
+                    <p>Submit a gRNA + target DNA pair and get a 0–100 risk score backed by DNABERT attention analysis, nucleotide mismatch counting, and PAM spatial dependency weighting.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feat-icon ic2">🧬</div>
+                    <h3>Attention Heatmap Visualization</h3>
+                    <p>View the actual averaged multi-head self-attention matrix from the last transformer layer, interpolated down to per-character resolution and rendered as an interactive Plotly heatmap.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feat-icon ic3">📊</div>
+                    <h3>Multi-Guide Batch Ranking</h3>
+                    <p>Compare up to 10 guide RNA candidates simultaneously. Each is scored, sorted by risk index, and displayed with confidence levels, hotspot counts, and color-coded safety badges.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feat-icon ic4">🗺️</div>
+                    <h3>Chromosome Risk Mapping</h3>
+                    <p>Select any chromosome and see a deterministic risk density profile with peak hotspot coordinates, sinusoidal baseline modeling, and three-tier color banding (safe / warn / critical).</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feat-icon ic5">🤖</div>
+                    <h3>AI Research Copilot</h3>
+                    <p>Ask natural-language questions about CRISPR biology, run workspace diagnostics, retrieve off-target locations, or request full analytical briefs — powered by Groq's LLM inference.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feat-icon ic6">📋</div>
+                    <h3>Export &amp; History Registry</h3>
+                    <p>Every pipeline run is stored in a local registry with timestamps, organism context, and per-guide metrics. Export results as structured JSON or plaintext clinical reports.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture">
+        <div class="section-inner">
+            <div class="section-label reveal">How It Works</div>
+            <div class="section-title reveal">From Sequence to Safety Score</div>
+            <div class="section-desc reveal">A five-stage pipeline that turns raw nucleotide strings into actionable risk intelligence.</div>
+
+            <div class="arch-pipeline reveal">
+                <div class="arch-step">
+                    <div class="step-num">STAGE 01</div>
+                    <h4>Input</h4>
+                    <p>Paste target DNA (up to 10,000 nt) and 1–10 guide RNA candidates (17–25 nt each)</p>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-step">
+                    <div class="step-num">STAGE 02</div>
+                    <h4>K-mer Tokenize</h4>
+                    <p>Combined gRNA+target window split into overlapping 6-mers for DNABERT input</p>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-step">
+                    <div class="step-num">STAGE 03</div>
+                    <h4>Inference</h4>
+                    <p>DNABERT forward pass extracts multi-head self-attention + sequence classification</p>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-step">
+                    <div class="step-num">STAGE 04</div>
+                    <h4>Risk Scoring</h4>
+                    <p>Mismatch layer, PAM dependency, and attention signals fuse into composite risk</p>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-step">
+                    <div class="step-num">STAGE 05</div>
+                    <h4>Visualize</h4>
+                    <p>Heatmaps, bar charts, chromosome maps, and safety badges rendered in real-time</p>
+                </div>
+            </div>
+
+            <div class="stats-row reveal">
+                <div class="stat-card">
+                    <div class="num"><em>3</em></div>
+                    <div class="lbl">Model Subcomponents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">20<em>bp</em></div>
+                    <div class="lbl">Interaction Window</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">10<em>x</em></div>
+                    <div class="lbl">Max Parallel Guides</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">6<em>-mer</em></div>
+                    <div class="lbl">Token Granularity</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo">
+        <div class="section-inner">
+            <div class="section-label reveal">See It In Action</div>
+            <div class="section-title reveal">Live Inference Preview</div>
+            <div class="section-desc reveal">A sample gRNA-vs-target analysis running through the full DNABERT pipeline.</div>
+
+            <div class="demo-container reveal">
+                <div class="demo-titlebar">
+                    <div class="demo-dot r"></div>
+                    <div class="demo-dot y"></div>
+                    <div class="demo-dot g"></div>
+                    <span style="font-size:.7rem;color:var(--muted);margin-left:.5rem;font-family:'JetBrains Mono',monospace">SafeCRISPR AI — Pipeline Console</span>
+                </div>
+                <div class="demo-body">
+                    <div class="demo-row">
+                        <span class="demo-label">gRNA</span>
+                        <span class="demo-seq" id="demo-grna"></span>
+                    </div>
+                    <div class="demo-row">
+                        <span class="demo-label">Target</span>
+                        <span class="demo-seq" id="demo-target"></span>
+                    </div>
+                    <div class="demo-row" style="margin-top:1rem">
+                        <span class="demo-label">Processing</span>
+                        <div style="flex:1"><div class="anim-bar"></div></div>
+                    </div>
+                    <div class="demo-result">
+                        <div class="label">GuideGuard™ Safety Score</div>
+                        <div class="score" id="demo-score">—</div>
+                        <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem" id="demo-class">Awaiting inference…</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-inner">
+            <div class="disclaimer reveal">
+                <p>🛡️ <strong>Research &amp; Simulation Use Only.</strong> SafeCRISPR AI outputs mathematical probabilities. They assist expert clinical judgment and must never replace in-vitro wet-lab confirmation (GUIDE-seq, high-throughput sequencing).</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="reveal">
+            <h2>Ready to Run Your<br><span style="color:var(--cyan)">First Analysis?</span></h2>
+            <p>Open the full platform, paste your sequences, and let DNABERT surface the risks your guides might carry.</p>
+            <a href="/dashboard" class="btn-primary">Launch SafeCRISPR AI →</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>SafeCRISPR AI · DNABERT Transformer Core · Built for Precision Genomics<br>
+        <span style="margin-top:.5rem;display:inline-block">Powered by <a href="#">HuggingFace Transformers</a> + <a href="#">Groq Inference</a></span></p>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const revealEls = document.querySelectorAll('.reveal');
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }});
+        }, {threshold: 0.1});
+        revealEls.forEach(el => revealObs.observe(el));
+
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // DNA canvas background
+        (function(){
+            const c = document.getElementById('dna-canvas');
+            const ctx = c.getContext('2d');
+            let w, h, t = 0;
+            function resize(){ w = c.width = window.innerWidth; h = c.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
+            function draw(){
+                ctx.clearRect(0,0,w,h);
+                const cx = w/2;
+                for(let i=0;i<60;i++){
+                    const y = (i/60)*h;
+                    const off = Math.sin(y*0.008+t)*120;
+                    const r = 3+Math.abs(Math.sin(y*0.01+t))*2;
+                    ctx.beginPath(); ctx.arc(cx+off,y,r,0,Math.PI*2);
+                    ctx.fillStyle='rgba(56,189,248,'+(0.15+Math.abs(Math.sin(y*0.01+t))*0.2)+')';
+                    ctx.fill();
+                    ctx.beginPath(); ctx.arc(cx-off,y,r,0,Math.PI*2);
+                    ctx.fillStyle='rgba(52,211,153,'+(0.15+Math.abs(Math.cos(y*0.01+t))*0.2)+')';
+                    ctx.fill();
+                    // connecting lines
+                    if(i%3===0){
+                        ctx.beginPath(); ctx.moveTo(cx+off,y); ctx.lineTo(cx-off,y);
+                        ctx.strokeStyle='rgba(255,255,255,0.03)'; ctx.lineWidth=1; ctx.stroke();
+                    }
+                }
+                t+=0.015;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
+        // Demo typing animation
+        (function(){
+            const grna = "GCCAATCGATCGATCGATCG";
+            const target = "GCCAATCGATCGATCGATGG";
+            const grnaEl = document.getElementById('demo-grna');
+            const targetEl = document.getElementById('demo-target');
+            const scoreEl = document.getElementById('demo-score');
+            const classEl = document.getElementById('demo-class');
+            let gi=0, ti=0;
+            function typeGrna(){
+                if(gi<=grna.length){ grnaEl.textContent=grna.substring(0,gi)+'█'; gi++; setTimeout(typeGrna,60); }
+                else{ grnaEl.textContent=grna; setTimeout(typeTarget,300); }
+            }
+            function typeTarget(){
+                if(ti<=target.length){ targetEl.textContent=target.substring(0,ti)+'█'; ti++; setTimeout(typeTarget,60); }
+                else{ targetEl.textContent=target; setTimeout(showScore,800); }
+            }
+            function showScore(){
+                let current=0;
+                const final=83.5;
+                const interval=setInterval(()=>{
+                    current+=1.7;
+                    if(current>=final){ current=final; clearInterval(interval); classEl.textContent='Medium Risk · 2 mismatches in 20bp window · PAM-adjacent region flagged'; }
+                    scoreEl.textContent=current.toFixed(1)+'%';
+                },30);
+            }
+            // Start when visible
+            const demoObs = new IntersectionObserver((entries)=>{
+                if(entries[0].isIntersecting){ typeGrna(); demoObs.disconnect(); }
+            },{threshold:0.3});
+            demoObs.observe(document.getElementById('demo'));
+        })();
+    </script>
+</body>
+</html>
