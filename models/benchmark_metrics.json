@@ -1,0 +1,18 @@
+{
+    "Random Forest": {
+        "auroc": 88.16,
+        "auprc": 90.43
+    },
+    "XGBoost": {
+        "auroc": 89.17,
+        "auprc": 90.57
+    },
+    "CNN": {
+        "auroc": 94.8,
+        "auprc": 94.34
+    },
+    "Transformer": {
+        "auroc": 94.36,
+        "auprc": 93.92
+    }
+}
