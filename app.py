@@ -299,7 +299,7 @@ def serve_landing():
 
 
 @app.route('/dashboard')
-def serve_dashboard():
+def dashboard():
     return render_template('index.html')
 
 

@@ -203,7 +203,7 @@
             <a href="#architecture">Pipeline</a>
             <a href="#demo">Live Preview</a>
         </div>
-        <a href="/dashboard" class="nav-cta">Launch App →</a>
+        <a href="{{ url_for('dashboard') }}" class="nav-cta">Launch App →</a>
     </nav>
 
     <section class="hero">
@@ -212,7 +212,7 @@
             <h1 class="reveal">Predict Off-Target<br>Risks <span class="gradient">Before They Happen</span></h1>
             <p class="reveal">SafeCRISPR AI uses a pre-trained DNABERT transformer model to analyze guide RNA sequences, extract multi-head self-attention maps, and surface high-risk off-target binding sites — all before you step into the lab.</p>
             <div class="hero-actions reveal">
-                <a href="/dashboard" class="btn-primary">Open Analysis Platform</a>
+                <a href="{{ url_for('dashboard') }}" class="btn-primary">Open Analysis Platform</a>
                 <a href="#features" class="btn-secondary">Explore Features</a>
             </div>
             <div class="ticker-wrap reveal">
@@ -409,7 +409,7 @@
         <div class="reveal">
             <h2>Ready to Run Your<br><span style="color:var(--cyan)">First Analysis?</span></h2>
             <p>Open the full platform, paste your sequences, and let DNABERT surface the risks your guides might carry.</p>
-            <a href="/dashboard" class="btn-primary">Launch SafeCRISPR AI →</a>
+            <a href="{{ url_for('dashboard') }}" class="btn-primary">Launch SafeCRISPR AI →</a>
         </div>
     </section>
 
