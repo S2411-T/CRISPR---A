@@ -5,3 +5,4 @@ groq==0.10.0
 python-dotenv==1.0.1
 gunicorn==22.0.0
 joblib==1.5.3
+torch==2.6.0
