@@ -8,3 +8,4 @@ joblib==1.5.3
 --find-links https://download.pytorch.org/whl/cpu
 torch
 scikit-learn
+xgboost
